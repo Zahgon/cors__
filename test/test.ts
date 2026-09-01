@@ -10,7 +10,7 @@ var util = require('util')
   var assert = require('assert')
   var cors = require('..')
 
-  var fakeRequest = function (method, headers) {
+  var fakeRequest = function (method, headers?) {
     return new FakeRequest(method, headers)
   }
 
@@ -697,7 +697,7 @@ var util = require('util')
 
 }());
 
-function FakeRequest (method, headers) {
+function FakeRequest (this: any, method, headers?) {
   this.headers = headers || {
     'origin': 'http://example.com',
     'access-control-request-headers': 'x-header-1, x-header-2'
@@ -705,14 +705,14 @@ function FakeRequest (method, headers) {
   this.method = method || 'GET'
 }
 
-function FakeResponse () {
+function FakeResponse (this: any) {
   this._headers = {}
   this.statusCode = 200
 }
 
 util.inherits(FakeResponse, EventEmitter)
 
-FakeResponse.prototype.end = function end () {
+FakeResponse.prototype.end = function end (this: any) {
   var response = this
 
   process.nextTick(function () {
@@ -720,12 +720,12 @@ FakeResponse.prototype.end = function end () {
   })
 }
 
-FakeResponse.prototype.getHeader = function getHeader (name) {
+FakeResponse.prototype.getHeader = function getHeader (this: any, name) {
   var key = name.toLowerCase()
   return this._headers[key]
 }
 
-FakeResponse.prototype.setHeader = function setHeader (name, value) {
+FakeResponse.prototype.setHeader = function setHeader (this: any, name, value) {
   var key = name.toLowerCase()
   this._headers[key] = value
 }
